@@ -3,7 +3,7 @@
      → 파일을 새로 올리면 앱이 바로 최신 버전으로 바뀝니다.
    ─ 아이콘 같은 나머지 파일은 캐시를 먼저 써서 빠르게 열고, 뒤에서 조용히 갱신합니다. */
 
-const CACHE = "monthly-check-v3";          // ← 내용을 크게 바꿀 땐 이 숫자를 올리세요
+const CACHE = "monthly-check-v4";          // ← 내용을 크게 바꿀 땐 이 숫자를 올리세요
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {

@@ -142,6 +142,86 @@
   .empty{text-align:center;color:var(--dim2);font-size:13px;padding:26px 16px;
     background:var(--card);border:1px dashed var(--line);border-radius:14px;line-height:1.75}
 
+  /* ===== 대분류 홈 ===== */
+  .catcard{background:var(--card);border:1px solid var(--line);border-radius:15px;
+    overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px}
+  .cathead{display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--card2);
+    border-bottom:1px solid var(--line)}
+  .cathead .cdot{width:10px;height:10px;border-radius:99px;flex-shrink:0}
+  .cathead .nm{flex:1;font-size:14.5px;font-weight:800;word-break:break-all}
+  .cathead .ct{font-size:11px;color:var(--dim);font-weight:700;flex-shrink:0}
+  .cathead button{width:28px;height:28px;border-radius:8px;border:none;background:transparent;
+    color:var(--dim);font-size:13px;cursor:pointer;flex-shrink:0}
+  .trow2{display:flex;align-items:center;gap:9px;padding:11px 14px;
+    border-bottom:1px solid var(--line);cursor:pointer;width:100%;
+    background:none;border-left:none;border-right:none;border-top:none;color:var(--txt);text-align:left}
+  .trow2:last-child{border-bottom:none}
+  .trow2:active{background:var(--card2)}
+  .trow2 .tn{flex:1;font-size:13.5px;font-weight:600;word-break:break-all}
+  .trow2 .last{font-size:11px;color:var(--dim);font-weight:500;margin-top:2px;display:block}
+  .trow2 .badge{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:20px;
+    background:var(--card2);color:var(--dim);flex-shrink:0}
+  .trow2 .badge.has{background:var(--ok-d);color:var(--ok)}
+  .trow2 .arw{color:var(--dim2);font-size:14px;flex-shrink:0}
+  .addtrack{width:100%;padding:11px 14px;background:none;border:none;border-top:1px dashed var(--line);
+    color:var(--dim2);font-size:12.5px;font-weight:700;cursor:pointer;text-align:left}
+  .addtrack:active{background:var(--card2)}
+  .newcat{width:100%;padding:14px;border-radius:14px;border:1px dashed var(--line);
+    background:transparent;color:var(--dim);font-size:13.5px;font-weight:700;cursor:pointer;
+    margin-bottom:8px}
+
+  /* ===== 기록 시트 ===== */
+  .logform{display:flex;gap:7px;margin-bottom:12px}
+  .logform input[type=date]{width:130px;height:44px;padding:0 9px;border-radius:11px;
+    border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14px;outline:none}
+  .logform input[type=text]{flex:1;height:44px;padding:0 12px;border-radius:11px;
+    border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:16px;
+    outline:none;min-width:0}
+  .logform input:focus{border-color:var(--pri)}
+  .logadd{width:100%;padding:13px;border-radius:12px;border:none;background:var(--pri);
+    color:#fff;font-size:14.5px;font-weight:800;cursor:pointer;margin-bottom:16px}
+  .logadd:active{transform:scale(.98)}
+  .loglist{display:flex;flex-direction:column;gap:7px}
+  .logit{display:flex;align-items:center;gap:10px;background:var(--card);
+    border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+  .logit .dt{font-size:11.5px;font-weight:800;color:var(--pri);width:46px;flex-shrink:0;
+    font-variant-numeric:tabular-nums}
+  .logit .tx{flex:1;font-size:13.5px;font-weight:600;word-break:break-all}
+  .logit button{width:28px;height:28px;border-radius:7px;border:none;background:transparent;
+    color:var(--bad);font-size:13px;cursor:pointer;flex-shrink:0}
+  .yeargrp{font-size:11.5px;color:var(--dim);font-weight:800;margin:14px 2px 7px}
+
+  /* ===== 연간 기록 격자 ===== */
+  .lgwrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;box-shadow:var(--shadow);-webkit-overflow-scrolling:touch;margin-bottom:6px}
+  table.lg{border:none;border-radius:0;box-shadow:none;min-width:520px}
+  table.lg th,table.lg td{border-bottom:1px solid var(--line)}
+  table.lg thead th{padding:8px 0;text-align:center;font-size:10.5px}
+  table.lg th.sticky,table.lg td.sticky{position:sticky;left:0;background:var(--card);z-index:1;
+    width:118px;max-width:118px}
+  table.lg thead th.sticky{background:var(--card2);text-align:left;padding-left:12px}
+  table.lg td.sticky{font-size:12.5px;font-weight:600;padding:8px 10px 8px 12px;
+    border-right:1px solid var(--line);word-break:break-all}
+  table.lg td.cell{text-align:center;padding:0}
+  .lcell{width:100%;height:36px;border:none;background:transparent;cursor:pointer;
+    font-size:12px;color:var(--dim2);font-weight:800}
+  .lcell.on{color:var(--ok)}
+  .lcell.now{background:var(--pri-d)}
+  .lcell:active{opacity:.5}
+
+  .mlogs{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;box-shadow:var(--shadow)}
+  .mlrow{display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .mlrow:last-child{border-bottom:none}
+  .mlrow.cur{background:var(--pri-d)}
+  .mllab{width:38px;flex-shrink:0;font-size:12.5px;font-weight:800;color:var(--dim);padding-top:2px}
+  .mlrow.cur .mllab{color:var(--pri)}
+  .mlitems{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .mli{font-size:13px;line-height:1.5;word-break:break-all}
+  .mli .d{color:var(--pri);font-weight:800;font-variant-numeric:tabular-nums;margin-right:5px}
+  .mli .t2{color:var(--dim);font-size:11.5px;font-weight:700}
+  .mlnone{color:var(--dim2);font-size:12.5px}
+
   /* ===== 연간 보기 ===== */
   .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
   .sbox{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 4px;text-align:center}
@@ -258,8 +338,9 @@
   </div>
 
   <div class="tabs">
-    <button class="tab on" id="tabMonth">📅 월별</button>
-    <button class="tab" id="tabPlan">📚 계획별</button>
+    <button class="tab on" id="tabCat">🗂 대분류</button>
+    <button class="tab" id="tabMonth">📅 월별</button>
+    <button class="tab" id="tabPlan">📊 연간</button>
   </div>
 
   <!-- 월별 탭 상단 -->
@@ -302,6 +383,29 @@
   </div>
 </div>
 
+<!-- 세부항목 기록 -->
+<div class="sheet-ov" id="tSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3 id="tTitle"></h3>
+    <p class="desc" id="tDesc"></p>
+    <div class="logform">
+      <input type="date" id="logDate">
+      <input type="text" id="logText" maxlength="60" placeholder="무엇을 했나요? (예: 향수 선물)" enterkeyhint="done">
+    </div>
+    <button class="logadd" id="logAdd">＋ 기록 추가</button>
+    <div id="logWrap"></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="key-like" id="tRename" style="flex:1;padding:12px;border-radius:11px;
+        border:1px solid var(--line);background:var(--card2);color:var(--txt);
+        font-size:13px;font-weight:700;cursor:pointer">이름 수정</button>
+      <button class="key-like" id="tDelete" style="flex:1;padding:12px;border-radius:11px;
+        border:1px solid var(--line);background:var(--card2);color:var(--bad);
+        font-size:13px;font-weight:700;cursor:pointer">세부항목 삭제</button>
+    </div>
+  </div>
+</div>
+
 <!-- 메뉴 -->
 <div class="sheet-ov" id="menuSheet">
   <div class="sheet">
@@ -310,7 +414,7 @@
     <div class="menulist">
       <button id="mToday"><span class="em">📅</span><span>이번 달로 이동<small id="todayLabel"></small></span></button>
       <button id="mCarry"><span class="em">↪</span><span>지난달 미완료 넘겨받기<small>원래 계획한 달은 기록으로 남습니다</small></span></button>
-      <button id="mNewCat"><span class="em">➕</span><span>새 계획 만들기<small>예: 고전 읽기, 운동, 자격증 공부</small></span></button>
+      <button id="mNewCat"><span class="em">➕</span><span>새 대분류 만들기<small>예: 고전 읽기, 운동, 자격증 공부</small></span></button>
       <button id="mExport"><span class="em">💾</span><span>백업 파일 내려받기<small>모든 데이터를 JSON으로 저장</small></span></button>
       <button id="mImport"><span class="em">📂</span><span>백업 파일 불러오기<small>다른 기기에서 옮겨올 때</small></span></button>
       <button id="mResetMonth" class="danger"><span class="em">↺</span><span>이번 달 체크 초기화<small>체크만 지우고 할 일은 유지</small></span></button>
@@ -356,15 +460,18 @@ function nowKeyStatic(){
   return n.getFullYear() + "-" + (m<10?"0":"") + m;
 }
 function migrate(raw){
-  var fresh = { v:2, cats:[], rec:[], recChk:{}, items:[] };
+  var fresh = { v:3, cats:[], rec:[], recChk:{}, items:[], tracks:[], logs:[] };
   if(!raw) return fresh;
-  if(raw.v === 2){
+  if(raw.v === 2 || raw.v === 3){
     raw.cats = raw.cats || []; raw.rec = raw.rec || [];
     raw.recChk = raw.recChk || {}; raw.items = raw.items || [];
+    raw.tracks = raw.tracks || [];        // 세부항목
+    raw.logs   = raw.logs   || [];        // 실행 기록
     // 시작월이 없던 예전 저장본 보정
     var first = null;
     Object.keys(raw.recChk).forEach(function(k){ if(!first || k < first) first = k; });
     raw.rec.forEach(function(t){ if(!t.since) t.since = first || nowKeyStatic(); });
+    raw.v = 3;
     return raw;
   }
   // v1 : { recurring:[], monthly:{}, checks:{} }
@@ -403,7 +510,7 @@ save();
    ========================================================= */
 var now  = new Date();
 var cur  = { y: now.getFullYear(), m: now.getMonth()+1 };
-var view = "month";                 // month | plan
+var view = "cat";                   // cat | month | plan
 var planCat = "__rec__";            // 계획별 탭에서 보고 있는 계획
 var planYear = cur.y;
 var addTarget = "__rec__";          // 입력바에서 고른 대상
@@ -501,13 +608,13 @@ function rename(id, isRec){
 }
 
 function newCat(){
-  var n = prompt("새 계획 이름을 입력하세요.\n예) 고전 읽기, 운동, 자격증 공부");
+  var n = prompt("새 대분류 이름을 입력하세요.\n예) 고전 읽기, 운동, 자격증 공부");
   if(n===null) return; n = n.trim(); if(!n) return;
   var c = { id:uid(), name:n, color:COLORS[data.cats.length % COLORS.length] };
   data.cats.push(c);
   addTarget = c.id; planCat = c.id;
   save(); render();
-  toast("「" + n + "」 계획을 만들었어요");
+  toast("「" + n + "」 대분류를 만들었어요");
   return c.id;
 }
 
@@ -652,7 +759,7 @@ function renderPlan(){
   var hasEtc = data.items.some(function(it){ return !it.catId || !catById(it.catId); });
   if(hasEtc) chips += '<button class="chip' + (planCat==="__etc__"?" on":"") + '" data-a="pcat" data-i="__etc__">' +
     '<span class="cdot" style="background:#8e9bb0"></span>기타</button>';
-  chips += '<button class="chip add" data-a="newcat">＋ 새 계획</button>';
+  chips += '<button class="chip add" data-a="newcat">＋ 새 대분류</button>';
   $("planChips").innerHTML = chips;
 
   var html = "";
@@ -661,13 +768,82 @@ function renderPlan(){
   if(planCat === "__rec__"){
     html += renderMatrix();
   }else{
+    var trs = tracksOf(planCat);
+    if(trs.length) html += renderLogYear(trs);
     var list = data.items.filter(function(it){
       if(planCat === "__etc__") return !it.catId || !catById(it.catId);
       return it.catId === planCat;
     });
-    html += renderYear(list);
+    if(list.length || !trs.length){
+      if(trs.length) html += '<div class="yeargrp">📌 월별 계획 항목</div>';
+      html += renderYear(list);
+    }
   }
   $("main").innerHTML = html;
+}
+
+/* ---- 세부항목 × 12개월 기록 격자 + 월별 기록 목록 ---- */
+function renderLogYear(trs){
+  var ids = trs.map(function(t){ return t.id; });
+  var yearLogs = data.logs.filter(function(l){
+    return ids.indexOf(l.trackId) !== -1 && l.date.slice(0,4) == planYear;
+  });
+  var months = {};
+  yearLogs.forEach(function(l){ months[l.date.slice(0,7)] = true; });
+
+  var html = '<div class="summary">' +
+    '<div class="sbox"><div class="n">' + trs.length + '</div><div class="l">세부항목</div></div>' +
+    '<div class="sbox ok"><div class="n">' + yearLogs.length + '</div><div class="l">올해 기록</div></div>' +
+    '<div class="sbox mv"><div class="n">' + Object.keys(months).length + '</div><div class="l">기록한 달</div></div>' +
+    '<div class="sbox rest"><div class="n">' +
+      logsIn2(ids, key(now.getFullYear(), now.getMonth()+1)).length + '</div><div class="l">이번 달</div></div>' +
+    '</div>';
+
+  // 격자
+  var head = '<tr><th class="sticky">세부항목</th>';
+  for(var m=1;m<=12;m++) head += '<th>' + m + '</th>';
+  head += '</tr>';
+  var body = trs.map(function(t){
+    var tds = '<td class="sticky">' + esc(t.name) + '</td>';
+    for(var m=1;m<=12;m++){
+      var k = key(planYear,m);
+      var n = logsIn(t.id, k).length;
+      var isNowCell = (planYear===now.getFullYear() && m===now.getMonth()+1);
+      tds += '<td class="cell"><button class="lcell' + (n?" on":"") + (isNowCell?" now":"") +
+        '" data-a="lgcell" data-i="' + t.id + '">' + (n ? n : "·") + '</button></td>';
+    }
+    return '<tr>' + tds + '</tr>';
+  }).join("");
+  html += '<div class="lgwrap"><table class="lg"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>' +
+    '<p style="font-size:11.5px;color:var(--dim);text-align:center;margin:8px 0 0;line-height:1.6">' +
+    '숫자는 그 달의 기록 수예요 · 눌러서 기록을 보거나 추가할 수 있어요</p>';
+
+  // 월별 기록 목록
+  html += '<div class="yeargrp">📖 ' + planYear + '년에 한 일</div><div class="mlogs">';
+  for(var m2=1;m2<=12;m2++){
+    var k2 = key(planYear,m2);
+    var ls = yearLogs.filter(function(l){ return l.date.slice(0,7)===k2; })
+      .sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+    var inner = "";
+    if(ls.length){
+      ls.forEach(function(l){
+        var t = trackById(l.trackId);
+        inner += '<div class="mli"><span class="d">' + shortDate(l.date) + '</span>' +
+          esc(l.text) + ' <span class="t2">· ' + (t ? esc(t.name) : "") + '</span></div>';
+      });
+    }else{
+      inner = '<div class="mlnone">―</div>';
+    }
+    var isCur = (planYear===now.getFullYear() && m2===now.getMonth()+1);
+    html += '<div class="mlrow' + (isCur?" cur":"") + '">' +
+      '<div class="mllab">' + m2 + '월</div><div class="mlitems">' + inner + '</div></div>';
+  }
+  return html + '</div>';
+}
+function logsIn2(ids, k){
+  return data.logs.filter(function(l){
+    return ids.indexOf(l.trackId) !== -1 && l.date.slice(0,7)===k;
+  });
 }
 
 function renderYear(all){
@@ -689,7 +865,7 @@ function renderYear(all){
 
   if(total === 0){
     return html + '<div class="empty">' + planYear + '년에 계획된 항목이 없어요.<br>' +
-      '<b>월별</b> 탭에서 이 계획을 골라 할 일을 추가해 보세요.</div>';
+      '<b>월별</b> 탭에서 이 대분류를 골라 할 일을 추가해 보세요.</div>';
   }
 
   html += '<div class="ylist">';
@@ -774,7 +950,7 @@ function renderAddChips(){
     h += '<button class="chip' + (addTarget===c.id?" on":"") + '" data-a="acat" data-i="' + c.id + '">' +
       '<span class="cdot" style="background:' + c.color + '"></span>' + esc(c.name) + '</button>';
   });
-  h += '<button class="chip add" data-a="newcat">＋ 새 계획</button>';
+  h += '<button class="chip add" data-a="newcat">＋ 새 대분류</button>';
   $("addChips").innerHTML = h;
 
   $("newTask").placeholder =
@@ -788,14 +964,158 @@ function renderAddChips(){
    ========================================================= */
 function render(){
   $("btnEdit").className = "iconbtn" + (editMode?" on":"");
+  $("tabCat").className   = "tab" + (view==="cat"?" on":"");
   $("tabMonth").className = "tab" + (view==="month"?" on":"");
   $("tabPlan").className  = "tab" + (view==="plan"?" on":"");
   $("barMonth").style.display = view==="month" ? "" : "none";
   $("barPlan").style.display  = view==="plan"  ? "" : "none";
   $("addbar").style.display   = view==="month" ? "" : "none";
   if(view==="month"){ renderMonth(); renderAddChips(); }
+  else if(view==="cat") renderCatHome();
   else renderPlan();
   bindMain();          // 화면을 다시 그린 뒤 항상 마지막에 연결
+}
+
+/* =========================================================
+   대분류 홈  (대분류 > 세부항목)
+   ========================================================= */
+function tracksOf(catId){
+  return data.tracks.filter(function(t){ return t.catId === catId; });
+}
+function logsOf(trackId){
+  return data.logs.filter(function(l){ return l.trackId === trackId; });
+}
+function logsIn(trackId, k){          // k = "2026-08"
+  return data.logs.filter(function(l){ return l.trackId===trackId && l.date.slice(0,7)===k; });
+}
+function shortDate(d){                // "2026-07-08" -> "7/8"
+  return parseInt(d.slice(5,7),10) + "/" + parseInt(d.slice(8,10),10);
+}
+function todayStr(){
+  var n = new Date(), m = n.getMonth()+1, d = n.getDate();
+  return n.getFullYear() + "-" + (m<10?"0":"") + m + "-" + (d<10?"0":"") + d;
+}
+
+function renderCatHome(){
+  var k = curKey();
+  var html = "";
+
+  if(data.cats.length === 0){
+    html += '<div class="empty">아직 대분류가 없어요.<br>' +
+      '<b>부모님 챙기기</b>, <b>고전 읽기</b> 처럼<br>큰 갈래를 먼저 만들어 보세요.</div>' +
+      '<div style="height:12px"></div>';
+  }
+
+  data.cats.forEach(function(c){
+    var trs = tracksOf(c.id);
+    html += '<div class="catcard">' +
+      '<div class="cathead"><span class="cdot" style="background:' + c.color + '"></span>' +
+      '<span class="nm">' + esc(c.name) + '</span>' +
+      '<span class="ct">세부 ' + trs.length + '</span>' +
+      (editMode ? '<button data-a="catren" data-i="' + c.id + '">✏️</button>' +
+                  '<button data-a="catdel" data-i="' + c.id + '">🗑</button>' : '') +
+      '</div>';
+
+    if(trs.length === 0){
+      html += '<div style="padding:14px;color:var(--dim2);font-size:12.5px;text-align:center">' +
+              '세부항목을 추가해 주세요</div>';
+    }
+    trs.forEach(function(t){
+      var all = logsOf(t.id);
+      var mine = logsIn(t.id, k).length;
+      var last = all.slice().sort(function(a,b){ return a.date < b.date ? 1 : -1; })[0];
+      html += '<button class="trow2" data-a="track" data-i="' + t.id + '">' +
+        '<span class="tn">' + esc(t.name) +
+          (last ? '<span class="last">최근 · ' + shortDate(last.date) + " " + esc(last.text) + '</span>'
+                : '<span class="last">아직 기록 없음</span>') +
+        '</span>' +
+        '<span class="badge' + (mine?" has":"") + '">이번 달 ' + mine + '</span>' +
+        '<span class="arw">›</span></button>';
+    });
+    html += '<button class="addtrack" data-a="newtrack" data-i="' + c.id + '">＋ 세부항목 추가</button>';
+    html += '</div>';
+  });
+
+  html += '<button class="newcat" data-a="newcat">＋ 새 대분류 만들기</button>';
+  $("main").innerHTML = html;
+}
+
+/* --- 세부항목 / 대분류 편집 --- */
+function newTrack(catId){
+  var n = prompt("세부항목 이름을 입력하세요.\n예) 부모님 연락, 부모님 선물, 자녀 여행");
+  if(n===null) return; n = n.trim(); if(!n) return;
+  data.tracks.push({ id:uid(), catId:catId, name:n });
+  save(); render(); toast("「" + n + "」 세부항목을 추가했어요");
+}
+function renameCat(id){
+  var c = catById(id); if(!c) return;
+  var v = prompt("대분류 이름 수정", c.name);
+  if(v===null) return; v = v.trim(); if(!v) return;
+  c.name = v; save(); render();
+}
+function delCat(id){
+  var c = catById(id); if(!c) return;
+  var trs = tracksOf(id);
+  var nLog = 0; trs.forEach(function(t){ nLog += logsOf(t.id).length; });
+  var msg = "「" + c.name + "」 대분류를 삭제할까요?";
+  if(trs.length) msg += "\n세부항목 " + trs.length + "개와 기록 " + nLog + "건도 함께 삭제됩니다.";
+  if(!confirm(msg)) return;
+  var ids = trs.map(function(t){ return t.id; });
+  data.logs   = data.logs.filter(function(l){ return ids.indexOf(l.trackId) === -1; });
+  data.tracks = data.tracks.filter(function(t){ return t.catId !== id; });
+  data.cats   = data.cats.filter(function(x){ return x.id !== id; });
+  data.items.forEach(function(it){ if(it.catId===id) it.catId = null; });
+  if(planCat === id) planCat = "__rec__";
+  save(); render(); toast("삭제했어요");
+}
+
+/* --- 기록 시트 --- */
+var curTrack = null;
+function trackById(id){
+  for(var i=0;i<data.tracks.length;i++) if(data.tracks[i].id===id) return data.tracks[i];
+  return null;
+}
+function openTrack(id){
+  var t = trackById(id); if(!t) return;
+  curTrack = id;
+  var c = catById(t.catId);
+  $("tTitle").textContent = t.name;
+  $("tDesc").textContent  = (c ? c.name : "기타") + " · 한 일을 기록해 두세요";
+  $("logDate").value = todayStr();
+  $("logText").value = "";
+  renderLogs();
+  openSheet($("tSheet"));
+}
+function renderLogs(){
+  var list = logsOf(curTrack).slice().sort(function(a,b){ return a.date < b.date ? 1 : -1; });
+  if(!list.length){
+    $("logWrap").innerHTML = '<div class="empty">아직 기록이 없어요.<br>위에서 첫 기록을 남겨 보세요.</div>';
+    return;
+  }
+  var html = "", year = null;
+  list.forEach(function(l){
+    var y = l.date.slice(0,4);
+    if(y !== year){ year = y; html += '<div class="yeargrp">' + y + '년</div>'; }
+    html += '<div class="logit"><span class="dt">' + shortDate(l.date) + '</span>' +
+      '<span class="tx">' + esc(l.text) + '</span>' +
+      '<button data-a="logdel" data-i="' + l.id + '">🗑</button></div>';
+  });
+  $("logWrap").innerHTML = '<div class="loglist">' + html + '</div>';
+  bindMain();
+}
+function addLog(){
+  var d = $("logDate").value, t = $("logText").value.trim();
+  if(!d){ toast("날짜를 골라 주세요"); return; }
+  if(!t){ toast("무엇을 했는지 적어 주세요"); return; }
+  data.logs.push({ id:uid(), trackId:curTrack, date:d, text:t });
+  save();
+  $("logText").value = "";
+  renderLogs(); render();
+  toast(shortDate(d) + " · " + t + " 기록했어요");
+}
+function delLog(id){
+  data.logs = data.logs.filter(function(l){ return l.id !== id; });
+  save(); renderLogs(); render();
 }
 
 function bindMain(){
@@ -820,6 +1140,12 @@ function bindMain(){
         case "ynx":   planYear++; render(); break;
         case "gomonth": cur.y = ky(id); cur.m = km(id); view="month"; render(); break;
         case "mx":    toggleMx(id, this.getAttribute("data-k")); break;
+        case "track":    openTrack(id); break;
+        case "newtrack": newTrack(id); break;
+        case "catren":   renameCat(id); break;
+        case "catdel":   delCat(id); break;
+        case "logdel":   delLog(id); break;
+        case "lgcell":   openTrack(id); break;
       }
     });
   }
@@ -841,8 +1167,10 @@ function toggleMx(id, k){
 
 /* --- 시트 --- */
 function openSheet(el){ el.className = "sheet-ov show"; }
-function closeSheets(){ $("mSheet").className="sheet-ov"; $("menuSheet").className="sheet-ov"; }
-[$("mSheet"), $("menuSheet")].forEach(function(ov){
+function closeSheets(){
+  $("mSheet").className="sheet-ov"; $("menuSheet").className="sheet-ov"; $("tSheet").className="sheet-ov";
+}
+[$("mSheet"), $("menuSheet"), $("tSheet")].forEach(function(ov){
   ov.addEventListener("click", function(e){ if(e.target===ov) closeSheets(); });
 });
 
@@ -898,8 +1226,30 @@ function goMonth(y,m){
   cur.y=y; cur.m=m; render();
 }
 
+$("tabCat").addEventListener("click", function(){ view="cat"; render(); });
 $("tabMonth").addEventListener("click", function(){ view="month"; render(); });
 $("tabPlan").addEventListener("click", function(){ view="plan"; planYear=cur.y; render(); });
+
+$("logAdd").addEventListener("click", addLog);
+$("logText").addEventListener("keydown", function(e){
+  if(e.key==="Enter"){ e.preventDefault(); addLog(); this.blur(); }
+});
+$("tRename").addEventListener("click", function(){
+  var t = trackById(curTrack); if(!t) return;
+  var v = prompt("세부항목 이름 수정", t.name);
+  if(v===null) return; v = v.trim(); if(!v) return;
+  t.name = v; save(); $("tTitle").textContent = v; render(); toast("수정했어요");
+});
+$("tDelete").addEventListener("click", function(){
+  var t = trackById(curTrack); if(!t) return;
+  var n = logsOf(curTrack).length;
+  var msg = "「" + t.name + "」 세부항목을 삭제할까요?";
+  if(n) msg += "\n기록 " + n + "건도 함께 삭제됩니다.";
+  if(!confirm(msg)) return;
+  data.logs   = data.logs.filter(function(l){ return l.trackId !== curTrack; });
+  data.tracks = data.tracks.filter(function(x){ return x.id !== curTrack; });
+  save(); closeSheets(); render(); toast("삭제했어요");
+});
 $("prevM").addEventListener("click", function(){ goMonth(cur.y,cur.m-1); });
 $("nextM").addEventListener("click", function(){ goMonth(cur.y,cur.m+1); });
 $("monthBtn").addEventListener("click", openMonthPick);
