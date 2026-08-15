@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>매달 할 일 체크</title>
+
+<!-- PWA / 홈화면 추가용 -->
+<meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="할일체크">
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  :root{
+    --bg:#0f1420;
+    --card:#181f2e;
+    --card2:#1f2838;
+    --line:#2b3547;
+    --txt:#e8edf5;
+    --dim:#8e9bb0;
+    --dim2:#5d6b81;
+    --pri:#5b9dff;
+    --pri-d:#1e3a5f;
+    --ok:#34d399;
+    --warn:#fbbf24;
+    --bad:#f87171;
+    --rep:#a78bfa;
+    --shadow:0 4px 20px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f4f6fa; --card:#ffffff; --card2:#f1f4f9; --line:#e2e7f0;
+      --txt:#141a24; --dim:#63708a; --dim2:#9aa6ba;
+      --pri:#2563eb; --pri-d:#dbeafe; --ok:#059669; --warn:#d97706;
+      --bad:#dc2626; --rep:#7c3aed;
+      --shadow:0 2px 14px rgba(20,30,60,.08);
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",
+      "Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:none;
+    display:flex;flex-direction:column;
+    min-height:100dvh;
+  }
+  button,input,select{font-family:inherit}
+
+  /* ============ 상단 앱바 ============ */
+  .appbar{
+    position:sticky;top:0;z-index:10;
+    background:var(--bg);
+    padding:calc(env(safe-area-inset-top) + 10px) 14px 8px;
+    border-bottom:1px solid var(--line);
+  }
+  .titlerow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .titlerow h1{font-size:16px;margin:0;font-weight:800;letter-spacing:-.3px;flex:1}
+  .titlerow h1 span{color:var(--pri)}
+  .iconbtn{
+    width:34px;height:34px;border-radius:9px;border:1px solid var(--line);
+    background:var(--card);color:var(--dim);font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .iconbtn:active{transform:scale(.93)}
+  .iconbtn.on{background:var(--pri-d);color:var(--pri);border-color:var(--pri)}
+
+  /* 월 선택 */
+  .monthbar{display:flex;align-items:center;gap:6px}
+  .navbtn{
+    width:40px;height:44px;border-radius:11px;border:1px solid var(--line);
+    background:var(--card);color:var(--txt);font-size:19px;cursor:pointer;flex-shrink:0;
+  }
+  .navbtn:active{transform:scale(.94)}
+  .monthbtn{
+    flex:1;height:44px;border-radius:11px;border:1px solid var(--line);
+    background:var(--card);color:var(--txt);font-size:17px;font-weight:800;
+    cursor:pointer;letter-spacing:-.3px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .monthbtn:active{transform:scale(.98)}
+  .monthbtn .today{
+    font-size:10px;font-weight:700;color:var(--pri);
+    background:var(--pri-d);padding:2px 6px;border-radius:5px;
+  }
+
+  /* 진행률 */
+  .progress{margin-top:10px}
+  .ptop{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-bottom:5px}
+  .ptop b{color:var(--txt);font-variant-numeric:tabular-nums}
+  .bar{height:7px;background:var(--card2);border-radius:99px;overflow:hidden}
+  .fill{height:100%;width:0;background:linear-gradient(90deg,var(--pri),var(--ok));
+    border-radius:99px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+  .fill.done{background:var(--ok)}
+
+  /* ============ 본문 ============ */
+  main{flex:1;padding:14px 14px 0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+  .sec{margin-bottom:16px}
+  .sechead{
+    display:flex;align-items:center;gap:7px;margin:0 2px 8px;
+    font-size:12px;font-weight:800;color:var(--dim);
+  }
+  .dot{width:7px;height:7px;border-radius:99px;flex-shrink:0}
+  .dot.rep{background:var(--rep)}
+  .dot.one{background:var(--warn)}
+  .sechead .cnt{margin-left:auto;font-weight:700;color:var(--dim2);font-variant-numeric:tabular-nums}
+
+  table{
+    width:100%;border-collapse:separate;border-spacing:0;
+    background:var(--card);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:var(--shadow);
+  }
+  thead th{
+    background:var(--card2);font-size:11px;color:var(--dim);font-weight:700;
+    padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);
+  }
+  thead th.c{text-align:center;width:52px}
+  thead th.d{width:44px}
+  tbody tr{border-bottom:1px solid var(--line)}
+  tbody tr:last-child{border-bottom:none}
+  tbody td{padding:0;vertical-align:middle}
+
+  /* 체크박스 셀 */
+  td.chk{width:52px;text-align:center}
+  .cbox{
+    width:26px;height:26px;border-radius:8px;border:2px solid var(--dim2);
+    background:transparent;cursor:pointer;display:inline-flex;
+    align-items:center;justify-content:center;color:#fff;font-size:15px;
+    transition:all .16s;padding:0;
+  }
+  .cbox:active{transform:scale(.88)}
+  .cbox.on{background:var(--ok);border-color:var(--ok)}
+  .cbox span{opacity:0;transform:scale(.5);transition:all .16s;font-weight:900;line-height:1}
+  .cbox.on span{opacity:1;transform:scale(1)}
+
+  /* 할 일 셀 */
+  td.name{padding:11px 4px 11px 0}
+  .tname{
+    font-size:14.5px;font-weight:600;line-height:1.4;
+    word-break:break-all;transition:opacity .2s;
+    background:none;border:none;color:var(--txt);padding:0;text-align:left;
+    width:100%;font-family:inherit;
+  }
+  tr.done .tname{opacity:.4;text-decoration:line-through}
+  .tmemo{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.4}
+  tr.done .tmemo{opacity:.4}
+
+  td.del{width:44px;text-align:center}
+  .delbtn{
+    width:30px;height:30px;border-radius:8px;border:none;background:transparent;
+    color:var(--bad);font-size:16px;cursor:pointer;
+  }
+  .delbtn:active{transform:scale(.88)}
+
+  .empty{
+    text-align:center;color:var(--dim2);font-size:13px;padding:26px 16px;
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;
+    line-height:1.7;
+  }
+
+  /* ============ 하단 입력바 ============ */
+  .addbar{
+    position:sticky;bottom:0;z-index:10;
+    background:var(--bg);border-top:1px solid var(--line);
+    padding:10px 14px calc(env(safe-area-inset-bottom) + 10px);
+  }
+  .typerow{display:flex;gap:6px;margin-bottom:8px}
+  .type{
+    flex:1;padding:8px;border-radius:9px;border:1px solid var(--line);
+    background:var(--card);color:var(--dim);font-size:12px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+  }
+  .type.on{background:var(--pri-d);color:var(--pri);border-color:var(--pri)}
+  .inrow{display:flex;gap:8px}
+  .inrow input{
+    flex:1;height:46px;padding:0 14px;border-radius:12px;
+    border:1px solid var(--line);background:var(--card);color:var(--txt);
+    font-size:16px;outline:none;min-width:0;
+  }
+  .inrow input:focus{border-color:var(--pri)}
+  .inrow input::placeholder{color:var(--dim2)}
+  .addbtn{
+    width:56px;height:46px;border-radius:12px;border:none;
+    background:var(--pri);color:#fff;font-size:15px;font-weight:800;cursor:pointer;flex-shrink:0;
+  }
+  .addbtn:active{transform:scale(.95)}
+  .addbtn:disabled{opacity:.4}
+
+  /* ============ 시트(월 선택 / 메뉴) ============ */
+  .sheet-ov{
+    position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;
+    display:none;align-items:flex-end;justify-content:center;
+  }
+  .sheet-ov.show{display:flex;animation:fade .18s}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .sheet{
+    width:100%;max-width:520px;background:var(--card);
+    border-radius:20px 20px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 18px);
+    animation:up .26s cubic-bezier(.2,.9,.3,1.05);max-height:86dvh;overflow-y:auto;
+  }
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .grab{width:38px;height:4px;background:var(--line);border-radius:9px;margin:0 auto 14px}
+  .sheet h3{margin:0 0 14px;font-size:15px;text-align:center;font-weight:800}
+
+  .yearrow{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px}
+  .yearrow button{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--line);
+    background:var(--card2);color:var(--txt);font-size:16px;cursor:pointer;
+  }
+  .yearrow b{font-size:19px;font-variant-numeric:tabular-nums;min-width:80px;text-align:center}
+  .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .mgrid button{
+    padding:14px 0;border-radius:11px;border:1px solid var(--line);
+    background:var(--card2);color:var(--txt);font-size:14px;font-weight:700;cursor:pointer;
+    position:relative;
+  }
+  .mgrid button.sel{background:var(--pri);border-color:var(--pri);color:#fff}
+  .mgrid button.now{border-color:var(--pri)}
+  .mgrid button i{
+    position:absolute;top:5px;right:6px;width:5px;height:5px;border-radius:99px;
+    background:var(--ok);
+  }
+  .mgrid button.sel i{background:#fff}
+
+  .menulist{display:flex;flex-direction:column;gap:8px}
+  .menulist button{
+    display:flex;align-items:center;gap:11px;padding:14px;border-radius:12px;
+    border:1px solid var(--line);background:var(--card2);color:var(--txt);
+    font-size:14px;font-weight:600;cursor:pointer;text-align:left;width:100%;
+  }
+  .menulist button .em{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+  .menulist button small{display:block;color:var(--dim);font-size:11.5px;font-weight:500;margin-top:2px}
+  .menulist button.danger{color:var(--bad)}
+
+  /* 토스트 */
+  .toast{
+    position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 96px);
+    transform:translateX(-50%) translateY(14px);
+    background:var(--txt);color:var(--bg);
+    padding:10px 18px;border-radius:99px;font-size:13px;font-weight:700;
+    opacity:0;pointer-events:none;transition:all .22s;z-index:60;white-space:nowrap;
+    box-shadow:0 6px 20px rgba(0,0,0,.3);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (min-width:560px){
+    body{max-width:520px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<div class="appbar">
+  <div class="titlerow">
+    <h1>매달 <span>할 일</span> 체크</h1>
+    <button class="iconbtn" id="btnEdit" title="편집">✎</button>
+    <button class="iconbtn" id="btnMenu" title="메뉴">☰</button>
+  </div>
+
+  <div class="monthbar">
+    <button class="navbtn" id="prevM">‹</button>
+    <button class="monthbtn" id="monthBtn"><span id="monthTxt">2026년 8월</span></button>
+    <button class="navbtn" id="nextM">›</button>
+  </div>
+
+  <div class="progress">
+    <div class="ptop">
+      <span id="pLabel">진행률</span>
+      <span><b id="pDone">0</b> / <b id="pTotal">0</b></span>
+    </div>
+    <div class="bar"><div class="fill" id="pFill"></div></div>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<div class="addbar">
+  <div class="typerow">
+    <button class="type on" id="tRep" data-type="rep">🔁 매달 반복</button>
+    <button class="type" id="tOne" data-type="one">📌 이번 달만</button>
+  </div>
+  <div class="inrow">
+    <input id="newTask" type="text" placeholder="할 일을 입력하세요" autocomplete="off" enterkeyhint="done" maxlength="60">
+    <button class="addbtn" id="addBtn">추가</button>
+  </div>
+</div>
+
+<!-- 월 선택 시트 -->
+<div class="sheet-ov" id="mSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3>월 선택</h3>
+    <div class="yearrow">
+      <button id="yPrev">‹</button><b id="yTxt">2026</b><button id="yNext">›</button>
+    </div>
+    <div class="mgrid" id="mGrid"></div>
+  </div>
+</div>
+
+<!-- 메뉴 시트 -->
+<div class="sheet-ov" id="menuSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3>메뉴</h3>
+    <div class="menulist">
+      <button id="mToday"><span class="em">📅</span><span>이번 달로 이동<small id="todayLabel"></small></span></button>
+      <button id="mCopy"><span class="em">📋</span><span>지난달 미완료 가져오기<small>지난달에 못 끝낸 일을 이번 달로</small></span></button>
+      <button id="mExport"><span class="em">💾</span><span>백업 파일 내려받기<small>모든 데이터를 JSON으로 저장</small></span></button>
+      <button id="mImport"><span class="em">📂</span><span>백업 파일 불러오기<small>다른 기기에서 옮겨올 때</small></span></button>
+      <button id="mResetMonth" class="danger"><span class="em">↺</span><span>이번 달 체크 초기화<small>체크만 지우고 할 일은 유지</small></span></button>
+    </div>
+    <input type="file" id="fileIn" accept="application/json,.json" style="display:none">
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   1. 저장소  (localStorage, 실패 시 메모리로 자동 대체)
+   ========================================================= */
+var KEY = "monthly-check-v1";
+var mem = null;
+
+var store = {
+  load: function(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){ /* 사생활 보호 모드 등 */ }
+    return null;
+  },
+  save: function(d){
+    mem = d;
+    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){}
+  }
+};
+
+/* 데이터 구조
+   recurring : [{id, title}]            매달 반복되는 할 일
+   monthly   : { "2026-08": [{id,title}] }   그 달에만 있는 할 일
+   checks    : { "2026-08": { id: true } }   달별 체크 여부
+*/
+var data = store.load() || { recurring: [], monthly: {}, checks: {} };
+if(!data.recurring) data.recurring = [];
+if(!data.monthly)   data.monthly   = {};
+if(!data.checks)    data.checks    = {};
+
+function save(){ store.save(data); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+/* =========================================================
+   2. 상태
+   ========================================================= */
+var now  = new Date();
+var cur  = { y: now.getFullYear(), m: now.getMonth()+1 };   // 보고 있는 달
+var pick = { y: cur.y };                                    // 월선택 시트의 연도
+var addType  = "rep";
+var editMode = false;
+
+function key(y,m){ return y + "-" + (m<10?"0":"") + m; }
+function curKey(){ return key(cur.y, cur.m); }
+function isNow(y,m){ return y===now.getFullYear() && m===now.getMonth()+1; }
+
+function $(id){ return document.getElementById(id); }
+
+/* =========================================================
+   3. 데이터 접근
+   ========================================================= */
+function monthTasks(k){ return data.monthly[k] || []; }
+function checksOf(k){ if(!data.checks[k]) data.checks[k] = {}; return data.checks[k]; }
+function isDone(k,id){ return !!checksOf(k)[id]; }
+
+function toggle(id){
+  var c = checksOf(curKey());
+  if(c[id]) delete c[id]; else c[id] = true;
+  save(); render();
+}
+
+function addTask(title){
+  title = title.trim();
+  if(!title) return;
+  var t = { id: uid(), title: title };
+  if(addType === "rep"){
+    data.recurring.push(t);
+    toast("매달 반복 할 일로 추가했어요");
+  }else{
+    var k = curKey();
+    if(!data.monthly[k]) data.monthly[k] = [];
+    data.monthly[k].push(t);
+    toast(cur.m + "월 할 일로 추가했어요");
+  }
+  save(); render();
+}
+
+function delTask(id, type){
+  if(type === "rep"){
+    if(!confirm("매달 반복되는 할 일입니다.\n모든 달에서 삭제됩니다. 계속할까요?")) return;
+    data.recurring = data.recurring.filter(function(t){ return t.id !== id; });
+    // 모든 달의 체크 기록도 정리
+    for(var k in data.checks){ delete data.checks[k][id]; }
+  }else{
+    var ck = curKey();
+    data.monthly[ck] = monthTasks(ck).filter(function(t){ return t.id !== id; });
+    delete checksOf(ck)[id];
+  }
+  save(); render();
+  toast("삭제했어요");
+}
+
+function renameTask(id, type, oldTitle){
+  var v = prompt("할 일 수정", oldTitle);
+  if(v === null) return;
+  v = v.trim();
+  if(!v) return;
+  var list = (type === "rep") ? data.recurring : monthTasks(curKey());
+  for(var i=0;i<list.length;i++){ if(list[i].id === id) list[i].title = v; }
+  save(); render();
+}
+
+/* =========================================================
+   4. 화면 그리기
+   ========================================================= */
+function render(){
+  var k = curKey();
+  $("monthTxt").innerHTML = cur.y + "년 " + cur.m + "월" +
+    (isNow(cur.y,cur.m) ? ' <span class="today">이번 달</span>' : "");
+  $("btnEdit").className = "iconbtn" + (editMode ? " on" : "");
+
+  var rep = data.recurring;
+  var one = monthTasks(k);
+  var total = rep.length + one.length;
+  var done  = 0;
+  var all = rep.concat(one);
+  for(var i=0;i<all.length;i++){ if(isDone(k, all[i].id)) done++; }
+
+  $("pDone").textContent  = done;
+  $("pTotal").textContent = total;
+  var pct = total ? Math.round(done/total*100) : 0;
+  var fill = $("pFill");
+  fill.style.width = pct + "%";
+  fill.className = "fill" + (total && done===total ? " done" : "");
+  $("pLabel").textContent =
+    total === 0 ? "할 일을 추가해 주세요" :
+    done === total ? "🎉 이번 달 완료!" : "진행률 " + pct + "%";
+
+  var html = "";
+  if(total === 0){
+    html = '<div class="empty">아직 등록된 할 일이 없어요.<br>' +
+           '아래에서 <b>매달 반복</b> 또는 <b>이번 달만</b>을 고르고 추가해 보세요.</div>';
+  }else{
+    if(rep.length) html += section("rep", "🔁 매달 반복", rep, k);
+    if(one.length) html += section("one", "📌 " + cur.m + "월에만", one, k);
+  }
+  $("main").innerHTML = html;
+  bindRows();
+}
+
+function section(type, label, list, k){
+  var doneN = 0;
+  for(var i=0;i<list.length;i++){ if(isDone(k,list[i].id)) doneN++; }
+
+  var rows = "";
+  for(var j=0;j<list.length;j++){
+    var t = list[j];
+    var d = isDone(k, t.id);
+    rows += '<tr class="' + (d?"done":"") + '">' +
+      '<td class="chk"><button class="cbox' + (d?" on":"") + '" data-act="chk" data-id="' + t.id + '"' +
+        ' aria-label="완료 체크"><span>✓</span></button></td>' +
+      '<td class="name"><button class="tname" data-act="edit" data-id="' + t.id + '" data-type="' + type + '">' +
+        esc(t.title) + '</button></td>' +
+      (editMode
+        ? '<td class="del"><button class="delbtn" data-act="del" data-id="' + t.id + '" data-type="' + type + '">🗑</button></td>'
+        : '') +
+      '</tr>';
+  }
+
+  return '<div class="sec">' +
+    '<div class="sechead"><span class="dot ' + type + '"></span>' + label +
+      '<span class="cnt">' + doneN + '/' + list.length + '</span></div>' +
+    '<table><thead><tr>' +
+      '<th class="c">완료</th><th>할 일</th>' + (editMode ? '<th class="d"></th>' : '') +
+    '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function bindRows(){
+  var btns = document.querySelectorAll("#main [data-act]");
+  for(var i=0;i<btns.length;i++){
+    btns[i].addEventListener("click", function(){
+      var act  = this.getAttribute("data-act");
+      var id   = this.getAttribute("data-id");
+      var type = this.getAttribute("data-type");
+      if(act === "chk")  toggle(id);
+      if(act === "del")  delTask(id, type);
+      if(act === "edit"){
+        if(editMode) renameTask(id, type, this.textContent);
+        else toggle(id);
+      }
+    });
+  }
+}
+
+/* =========================================================
+   5. 월 이동
+   ========================================================= */
+function goMonth(y,m){
+  if(m < 1){ m = 12; y--; }
+  if(m > 12){ m = 1; y++; }
+  cur.y = y; cur.m = m;
+  render();
+}
+
+function buildGrid(){
+  $("yTxt").textContent = pick.y;
+  var g = $("mGrid"); g.innerHTML = "";
+  for(var m=1;m<=12;m++){
+    (function(m){
+      var b = document.createElement("button");
+      var k = key(pick.y, m);
+      var has = monthTasks(k).length > 0 || Object.keys(data.checks[k]||{}).length > 0;
+      b.innerHTML = m + "월" + (has ? "<i></i>" : "");
+      if(pick.y===cur.y && m===cur.m) b.className = "sel";
+      else if(isNow(pick.y,m))        b.className = "now";
+      b.addEventListener("click", function(){
+        goMonth(pick.y, m);
+        closeSheets();
+      });
+      g.appendChild(b);
+    })(m);
+  }
+}
+
+/* =========================================================
+   6. 시트 / 메뉴
+   ========================================================= */
+function openSheet(el){ el.className = "sheet-ov show"; }
+function closeSheets(){
+  $("mSheet").className = "sheet-ov";
+  $("menuSheet").className = "sheet-ov";
+}
+[$("mSheet"), $("menuSheet")].forEach(function(ov){
+  ov.addEventListener("click", function(e){ if(e.target === ov) closeSheets(); });
+});
+
+function toast(msg){
+  var t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show";
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.className = "toast"; }, 1800);
+}
+
+/* 지난달 미완료 가져오기 */
+function copyUndone(){
+  var pm = cur.m - 1, py = cur.y;
+  if(pm < 1){ pm = 12; py--; }
+  var pk = key(py,pm), ck = curKey();
+  var src = monthTasks(pk);
+  var moved = 0;
+  if(!data.monthly[ck]) data.monthly[ck] = [];
+  for(var i=0;i<src.length;i++){
+    if(isDone(pk, src[i].id)) continue;
+    var dup = false;
+    var tgt = data.monthly[ck];
+    for(var j=0;j<tgt.length;j++){ if(tgt[j].title === src[i].title) dup = true; }
+    if(dup) continue;
+    tgt.push({ id: uid(), title: src[i].title });
+    moved++;
+  }
+  save(); render(); closeSheets();
+  toast(moved ? pm + "월 미완료 " + moved + "건을 가져왔어요" : "가져올 미완료 항목이 없어요");
+}
+
+function exportData(){
+  var blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "할일체크-백업-" + curKey() + ".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  closeSheets(); toast("백업 파일을 저장했어요");
+}
+
+function importData(file){
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var d = JSON.parse(r.result);
+      if(!d || typeof d !== "object" || !("recurring" in d)) throw 0;
+      if(!confirm("현재 데이터를 덮어씁니다. 계속할까요?")) return;
+      data = { recurring: d.recurring||[], monthly: d.monthly||{}, checks: d.checks||{} };
+      save(); render(); closeSheets(); toast("불러오기 완료");
+    }catch(e){ alert("백업 파일 형식이 올바르지 않습니다."); }
+  };
+  r.readAsText(file);
+}
+
+function resetMonth(){
+  if(!confirm(cur.m + "월의 체크 표시를 모두 지웁니다.\n할 일 목록은 그대로 유지됩니다.")) return;
+  data.checks[curKey()] = {};
+  save(); render(); closeSheets(); toast("체크를 초기화했어요");
+}
+
+/* =========================================================
+   7. 이벤트 연결
+   ========================================================= */
+$("prevM").addEventListener("click", function(){ goMonth(cur.y, cur.m-1); });
+$("nextM").addEventListener("click", function(){ goMonth(cur.y, cur.m+1); });
+$("monthBtn").addEventListener("click", function(){ pick.y = cur.y; buildGrid(); openSheet($("mSheet")); });
+$("yPrev").addEventListener("click", function(){ pick.y--; buildGrid(); });
+$("yNext").addEventListener("click", function(){ pick.y++; buildGrid(); });
+
+$("btnEdit").addEventListener("click", function(){
+  editMode = !editMode; render();
+  toast(editMode ? "편집 모드 · 이름을 누르면 수정돼요" : "편집 모드를 껐어요");
+});
+$("btnMenu").addEventListener("click", function(){
+  $("todayLabel").textContent = now.getFullYear() + "년 " + (now.getMonth()+1) + "월";
+  openSheet($("menuSheet"));
+});
+$("mToday").addEventListener("click", function(){ goMonth(now.getFullYear(), now.getMonth()+1); closeSheets(); });
+$("mCopy").addEventListener("click", copyUndone);
+$("mExport").addEventListener("click", exportData);
+$("mImport").addEventListener("click", function(){ $("fileIn").click(); });
+$("fileIn").addEventListener("change", function(){ if(this.files[0]) importData(this.files[0]); this.value=""; });
+$("mResetMonth").addEventListener("click", resetMonth);
+
+var typeBtns = document.querySelectorAll(".type");
+for(var i=0;i<typeBtns.length;i++){
+  typeBtns[i].addEventListener("click", function(){
+    addType = this.getAttribute("data-type");
+    for(var j=0;j<typeBtns.length;j++){
+      typeBtns[j].className = "type" + (typeBtns[j]===this ? " on" : "");
+    }
+    $("newTask").placeholder = (addType==="rep")
+      ? "매달 반복할 일 (예: 관리비 납부)"
+      : cur.m + "월에만 할 일 (예: 자동차 보험 갱신)";
+  });
+}
+
+$("addBtn").addEventListener("click", function(){
+  addTask($("newTask").value); $("newTask").value = "";
+});
+$("newTask").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); addTask(this.value); this.value = ""; this.blur(); }
+});
+
+/* 좌우 스와이프로 월 이동 */
+(function(){
+  var x0=null, y0=null;
+  document.addEventListener("touchstart", function(e){
+    if(e.touches.length!==1) return;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener("touchend", function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
+    if(Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)*1.8){
+      goMonth(cur.y, cur.m + (dx < 0 ? 1 : -1));
+    }
+    x0 = null;
+  }, {passive:true});
+})();
+
+/* =========================================================
+   8. PWA - 아이콘/매니페스트를 파일 안에서 직접 생성
+   ========================================================= */
+function makeIcon(size){
+  var c = document.createElement("canvas");
+  c.width = c.height = size;
+  var g = c.getContext("2d");
+  var s = size/512;
+
+  var grad = g.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,"#3b82f6"); grad.addColorStop(1,"#8b5cf6");
+  g.fillStyle = grad; g.fillRect(0,0,size,size);
+
+  // 달력 몸통
+  g.fillStyle = "#ffffff";
+  roundRect(g, 96*s, 130*s, 320*s, 290*s, 34*s); g.fill();
+  // 달력 헤더
+  g.fillStyle = "rgba(0,0,0,.18)";
+  roundRect(g, 96*s, 130*s, 320*s, 66*s, 34*s); g.fill();
+  g.fillRect(96*s, 172*s, 320*s, 24*s);
+  // 고리
+  g.fillStyle = "#ffffff";
+  roundRect(g, 158*s, 92*s, 26*s, 74*s, 13*s); g.fill();
+  roundRect(g, 328*s, 92*s, 26*s, 74*s, 13*s); g.fill();
+  // 체크
+  g.strokeStyle = "#22c55e";
+  g.lineWidth = 40*s; g.lineCap = "round"; g.lineJoin = "round";
+  g.beginPath();
+  g.moveTo(168*s, 302*s); g.lineTo(232*s, 362*s); g.lineTo(348*s, 236*s);
+  g.stroke();
+  return c.toDataURL("image/png");
+}
+function roundRect(g,x,y,w,h,r){
+  g.beginPath();
+  g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r);
+  g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath();
+}
+
+try{
+  var i192 = makeIcon(192), i512 = makeIcon(512);
+
+  var apple = document.createElement("link");
+  apple.rel = "apple-touch-icon"; apple.href = i192;
+  document.head.appendChild(apple);
+
+  var fav = document.createElement("link");
+  fav.rel = "icon"; fav.href = i192;
+  document.head.appendChild(fav);
+
+  var manifest = {
+    name: "매달 할 일 체크",
+    short_name: "할일체크",
+    start_url: ".",
+    scope: ".",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#0f1420",
+    theme_color: "#0f1420",
+    lang: "ko",
+    icons: [
+      { src: i192, sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: i512, sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: i512, sizes: "512x512", type: "image/png", purpose: "maskable" }
+    ]
+  };
+  var mlink = document.createElement("link");
+  mlink.rel = "manifest";
+  mlink.href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+  document.head.appendChild(mlink);
+}catch(e){}
+
+/* 같은 폴더에 sw.js 가 있으면 오프라인 캐시 등록 (없어도 정상 동작) */
+if("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+
+/* =========================================================
+   9. 시작
+   ========================================================= */
+$("newTask").placeholder = "매달 반복할 일 (예: 관리비 납부)";
+render();
+
+})();
+</script>
+</body>
+</html>
