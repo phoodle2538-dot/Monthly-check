@@ -12,6 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="할일체크">
 <meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
   :root{
@@ -716,38 +719,47 @@ function roundRect(g,x,y,w,h,r){
   g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath();
 }
 
-try{
-  var i192 = makeIcon(192), i512 = makeIcon(512);
+/* 보통은 위 <head>의 manifest.json / icon-192.png 을 그대로 씁니다.
+   그 파일들이 없을 때(예: 파일을 그냥 더블클릭해서 열었을 때)만
+   아래 코드가 아이콘을 직접 그려 대신 채워 넣습니다. */
+fetch("manifest.json", { method: "GET" })
+  .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+  .catch(function(){
+    try{
+      var i192 = makeIcon(192), i512 = makeIcon(512);
+      var old = document.querySelectorAll("link[rel=manifest],link[rel=icon],link[rel=apple-touch-icon]");
+      for(var i=0;i<old.length;i++) old[i].parentNode.removeChild(old[i]);
 
-  var apple = document.createElement("link");
-  apple.rel = "apple-touch-icon"; apple.href = i192;
-  document.head.appendChild(apple);
+      var apple = document.createElement("link");
+      apple.rel = "apple-touch-icon"; apple.href = i192;
+      document.head.appendChild(apple);
 
-  var fav = document.createElement("link");
-  fav.rel = "icon"; fav.href = i192;
-  document.head.appendChild(fav);
+      var fav = document.createElement("link");
+      fav.rel = "icon"; fav.href = i192;
+      document.head.appendChild(fav);
 
-  var manifest = {
-    name: "매달 할 일 체크",
-    short_name: "할일체크",
-    start_url: ".",
-    scope: ".",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: "#0f1420",
-    theme_color: "#0f1420",
-    lang: "ko",
-    icons: [
-      { src: i192, sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: i512, sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: i512, sizes: "512x512", type: "image/png", purpose: "maskable" }
-    ]
-  };
-  var mlink = document.createElement("link");
-  mlink.rel = "manifest";
-  mlink.href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
-  document.head.appendChild(mlink);
-}catch(e){}
+      var manifest = {
+        name: "매달 할 일 체크",
+        short_name: "할일체크",
+        start_url: ".",
+        scope: ".",
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#0f1420",
+        theme_color: "#0f1420",
+        lang: "ko",
+        icons: [
+          { src: i192, sizes: "192x192", type: "image/png", purpose: "any" },
+          { src: i512, sizes: "512x512", type: "image/png", purpose: "any" },
+          { src: i512, sizes: "512x512", type: "image/png", purpose: "maskable" }
+        ]
+      };
+      var mlink = document.createElement("link");
+      mlink.rel = "manifest";
+      mlink.href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+      document.head.appendChild(mlink);
+    }catch(e){}
+  });
 
 /* 같은 폴더에 sw.js 가 있으면 오프라인 캐시 등록 (없어도 정상 동작) */
 if("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
